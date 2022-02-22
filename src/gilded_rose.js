@@ -71,13 +71,15 @@ class Shop {
   constructor(items=[]){
     this.items = items;
   }
-  
-  updateQuality() {
-    
-    }
 
-    
-  }
+  updateQuality() {
+		this.items.forEach((product) => {
+				product.checkName();
+				product.dailyCount();
+				});
+
+		return this.items;
+	}
 }
 
 module.exports = {
