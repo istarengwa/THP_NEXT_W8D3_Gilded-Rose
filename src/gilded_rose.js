@@ -45,6 +45,26 @@ class Item {
 		return false;
 	}
 
+  dailyCount() {
+		if (this.legendary) {
+			return;
+		}
+
+		if (this.expired()) return;
+
+		if (this.betterOlder) {
+			if (this.sellIn <= 10 && this.sellIn > 5) {
+				this.quality += 2;
+			} else if (this.sellIn <= 5) {
+				this.quality += 3;
+			} else this.quality++;
+		} else {
+			this.quality -= this.expireSpeed;
+		}
+		this.qualityExceeded();
+		this.sellIn--;
+	}
+
 }
 
 class Shop {
