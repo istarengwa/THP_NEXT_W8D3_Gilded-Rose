@@ -3,7 +3,25 @@ class Item {
     this.name = name;
     this.sellIn = sellIn;
     this.quality = quality;
+    this.legendary = false;
+    this.betterOlder = false;
+    this.conjured = false;
+    this.expireSpeed = 1;
   }
+
+  checkName() {
+		if (this.name.includes('Backstage passes', 0) || this.name.includes('Aged Brie', 0)) {
+			this.betterOlder = true;
+		} else if (this.name.includes('Sulfuras, Hand of Ragnaros', 0)) {
+			this.legendary = true;
+		} else if (this.name.includes('Conjured', 0)) {
+			this.conjured = true;
+			this.expireSpeed = 2;
+		}
+  }
+
+
+
 }
 
 class Shop {
