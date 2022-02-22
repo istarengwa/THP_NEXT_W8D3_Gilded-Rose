@@ -50,7 +50,7 @@ class Item {
 			return;
 		}
 
-		if (this.expired()) return;
+		if (this.isExpired()) return;
 
 		if (this.betterOlder) {
 			if (this.sellIn <= 10 && this.sellIn > 5) {
