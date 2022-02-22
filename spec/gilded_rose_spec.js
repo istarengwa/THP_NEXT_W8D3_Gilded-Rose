@@ -59,7 +59,7 @@ describe("Gilded Rose", function() {
   });
 
   it('Ne pas modifier la qualité de Sulfuras', () => {
-    listItems.push(new Item('Sulfuras, Hand of Ragnaros', 5, 80));
+    listItems.push(new Item('Sulfuras, Hand of Ragnaros', 5, 50));
 
     const gildedRose = new Shop(listItems);
     const items = gildedRose.updateQuality();
@@ -69,6 +69,110 @@ describe("Gilded Rose", function() {
     ];
     expected.forEach((testCase, idx) => {
       expect(items[idx].quality).toBe(testCase.quality);
+    });
+  });
+
+  it("Réduire deux fois plus rapidement la qualité des items une fois la dates de péremption dépassée", () => {
+    listItems.push(new Item('+5 Dexterity Vest', 10, 20));
+    listItems.push(new Item('Top quality cake', -1, 20));
+
+    const gildedRose = new Shop(listItems);
+    const items = gildedRose.updateQuality();
+
+    const expected = [
+      { sellIn: 9, quality: 19 },
+      { sellIn: -2, quality: 18 },
+
+    ];
+    expected.forEach((testCase, idx) => {
+      expect(items[idx].quality).toBe(testCase.quality);
+      expect(items[idx].sellIn).toBe(testCase.sellIn);
+    });
+  });
+
+  it("La qualité ne peux pas passer sous 0", () => {
+    listItems.push(new Item('+5 Dexterity Vest', 10, 0));
+    listItems.push(new Item('Top quality cake', -1, 0));
+
+    const gildedRose = new Shop(listItems);
+    const items = gildedRose.updateQuality();
+
+    const expected = [
+      { quality: 0 },
+      { quality: 0 },
+
+    ];
+    expected.forEach((testCase, idx) => {
+      expect(items[idx].quality).toBe(testCase.quality);
+    });
+  });
+
+  it("La qualité des produits ne peux pas passer au-dessus de 50 (sauf sulfuras qui pete des fiak)", () => {
+    listItems.push(new Item('Sulfuras, Hand of Ragnaros', 10, 50));
+    listItems.push(new Item('Aged Brie', 5, 50));
+
+    const gildedRose = new Shop(listItems);
+    const items = gildedRose.updateQuality();
+
+    const expected = [
+      { sellIn: 9, quality: 80 },
+      { sellIn: 4, quality: 50 },
+
+    ];
+    expected.forEach((testCase, idx) => {
+      expect(items[idx].quality).toBe(testCase.quality);
+    });
+  });
+
+  it("La qualité des pass Backstage tombe à 0 après le concert", () => {
+    listItems.push(new Item('Backstage passes', 0, 20));
+
+    const gildedRose = new Shop(listItems);
+    const items = gildedRose.updateQuality();
+
+    const expected = [
+      { sellIn: -1, quality: 0 },
+
+    ];
+    expected.forEach((testCase, idx) => {
+      expect(items[idx].quality).toBe(testCase.quality);
+    });
+  });
+
+  //test bonus
+
+  it('Modifier la qualité de Sulfuras si elle est Conjured (nan je rigole elle peux pas être conjured elle est mythique !!!!)', () => {
+    listItems.push(new Item('Conjured Sulfuras, Hand of Ragnaros', 5, 80));
+
+    const gildedRose = new Shop(listItems);
+    const items = gildedRose.updateQuality();
+
+    const expected = [
+      { sellIn: 4, quality: 80 },
+    ];
+    expected.forEach((testCase, idx) => {
+      expect(items[idx].quality).toBe(testCase.quality);
+    });
+  });
+
+  it('Augmenter la qualité de 2 quand il reste 10 jours ou moins et plus de 5 avant la deadline du brie ou de backstage', () => {
+    listItems.push(new Item("Backstage passes to a TAFKAL80ETC concert", 15, 20));
+    listItems.push(new Item("Backstage passes to a TAFKAL80ETC concert", 10, 49));
+    listItems.push(new Item("Backstage passes to a TAFKAL80ETC concert", 10, 28));
+    listItems.push(new Item("Backstage passes to a TAFKAL80ETC concert", 5, 28));
+
+    const gildedRose = new Shop(listItems);
+    const items = gildedRose.updateQuality();
+
+    const expected = [
+      { sellIn: 14, quality: 21 },
+      { sellIn: 9, quality: 50 },
+      { sellIn: 9, quality: 30 },
+      { sellIn: 4, quality: 31 },
+    ];
+    expected.forEach((testCase, idx) => {
+      expect(items[idx].quality).toBe(testCase.quality);
+      expect(items[idx].sellIn).toBe(testCase.sellIn);
     });
   });
 
