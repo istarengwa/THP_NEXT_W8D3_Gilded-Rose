@@ -20,7 +20,30 @@ class Item {
 		}
   }
 
+  qualityExceeded() {
+		if (this.quality >= 50 || this.quality <= 0) {
+			if (this.quality > 50) this.quality = 50;
+			if (this.quality < 0) this.quality = 0;
+		}
+	}
 
+  isExpired() {
+		if (this.sellIn <= 0) {
+			if (this.betterOlder) {
+				this.quality = 0;
+			} else {
+				this.expireSpeed = 2;
+
+				if (this.conjured) this.expireSpeed = 4;
+
+				this.quality -= this.expireSpeed;
+				this.qualityExceeded();
+			}
+			this.sellIn--;
+			return true;
+		}
+		return false;
+	}
 
 }
 
