@@ -196,4 +196,18 @@ describe("Gilded Rose", function() {
     });
   });
 
+  it('Est ce que Sulfura perd en qualité si elle pourris ? je ne crois pas', () => {
+    listItems.push(new Item('Conjured Sulfuras, Hand of Ragnaros', 0, 80));
+
+    const gildedRose = new Shop(listItems);
+    const items = gildedRose.updateQuality();
+
+    const expected = [
+      { sellIn: -1, quality: 80 },
+    ];
+    expected.forEach((testCase, idx) => {
+      expect(items[idx].quality).toBe(testCase.quality);
+    });
+  });
+
 });
