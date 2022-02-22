@@ -176,4 +176,24 @@ describe("Gilded Rose", function() {
     });
   });
 
+  it("Réduire deux fois plus rapidement la qualité des items Conjured, avec ou sans dépassement de la date", () => {
+    listItems.push(new Item("Conjured Elixir of the Mongoose", 5, 7));
+    listItems.push(new Item("Conjured Mana Cake", 3, 6));
+    listItems.push(new Item("Conjured +5 Dexterity Vest", 0, 20));
+
+    const gildedRose = new Shop(listItems);
+    const items = gildedRose.updateQuality();
+
+    const expected = [
+      { sellIn: 4, quality: 5 },
+      { sellIn: 2, quality: 4 },
+      { sellIn: -1, quality: 16 },
+
+    ];
+    expected.forEach((testCase, idx) => {
+      expect(items[idx].quality).toBe(testCase.quality);
+      expect(items[idx].sellIn).toBe(testCase.sellIn);
+    });
+  });
+
 });
